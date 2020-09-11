@@ -26,6 +26,7 @@
                             org-drill
                             org-ref
                             org-roam
+                            simple-httpd
                             org-roam-server
                             org-roam-bibtex
                             treemacs
@@ -43,11 +44,11 @@
 (setq prelude-use-smooth-scrolling t)
 
 ;;uncomment this to use default theme
-(disable-theme 'zenburn)
-(use-package cyberpunk-theme
-  :ensure t
-  :config
-  (load-theme 'cyberpunk t))
+;; (disable-theme 'zenburn)
+;;(use-package cyberpunk-theme
+;;  :ensure t
+;;  :config
+;;  (load-theme 'cyberpunk t))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -92,6 +93,26 @@
 ;; Packages
 (require 'julia-mode)
 (require 'all-the-icons)
+
+;;;; Transparency
+
+;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
+;;(set-frame-parameter (selected-frame) 'alpha <both>)
+(set-frame-parameter (selected-frame) 'alpha '(85 . 50))
+(add-to-list 'default-frame-alist '(alpha . (85 . 50)))
+
+(defun toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (set-frame-parameter
+     nil 'alpha
+     (if (eql (cond ((numberp alpha) alpha)
+                    ((numberp (cdr alpha)) (cdr alpha))
+                    ;; Also handle undocumented (<active> <inactive>) form.
+                    ((numberp (cadr alpha)) (cadr alpha)))
+              100)
+         '(85 . 50) '(100 . 100)))))
+(global-set-key (kbd "C-c T") 'toggle-transparency)
 
 
 ; LocalWords:  Autofill Nyan

@@ -9,6 +9,8 @@
  '(org-agenda-files (list org-directory
                           "~/Documents/Bib"
                           "~/Documents/org/roam")))
+;; Agenda
+(setq org-agenda-include-diary t)
 ;; ipython
 (require 'ob-ipython)
 (org-babel-do-load-languages
@@ -35,17 +37,25 @@
 (setq org-capture-templates
       '(("t" "todo" entry (file org-default-notes-file)
          "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
-        ("m" "Meeting" entry (file org-default-notes-file)
-         "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
+        ("m" "Meeting" entry (file+headline "~/Documents/org/schedule.org" "Meetings")
+         "* %? :MEETING:\n" )
+        ("s" "Seminar" entry (file+headline "~/Documents/org/schedule.org" "Seminars")
+         "* %? :SEMINADR:\n" )
+        ("b" "Birthday" entry (file+headline "~/Documents/org/schedule.org" "Birthdays")
+         "* %? :BIRTHDAY:\n" )
+        ("c" "Class" entry (file+headline "~/Documents/org/schedule.org" "Classes")
+         "* %? :CLASS:\n" )
+        ("e" "Meeting" entry (file+headline "~/Documents/org/schedule.org" "Meetings")
+         "* %? :EVENT:\n" )
         ("d" "Diary" entry (file+datetree "~/Documents/org/diary.org")
          "* %?\n%U\n" :clock-in t :clock-resume t)
         ("i" "Idea" entry (file org-default-notes-file)
          "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
         ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
          "** NEXT %? \nDEADLINE: %t")
-        ("s" "Simple Flashcard" entry (file+headline "~/Documents/org/drills.org" "Simple Flashcards")
+        ("S" "Simple Flashcard" entry (file+headline "~/Documents/org/drills.org" "Simple Flashcards")
          "* Item :drill:\n%t\n%^{Question}\n** Answer\n%^{Answer}")
-        ("c" "Cloze Flashcard" entry (file+headline "~/Documents/org/drills.org" "Cloze Flashcards")
+        ("Z" "Cloze Flashcard" entry (file+headline "~/Documents/org/drills.org" "Cloze Flashcards")
          "* Item :drill:\n %t\n%^{Clozed ([]) text}")
         ))
 ;; Where to send captures
@@ -100,6 +110,17 @@
               (("C-c n i" . org-roam-insert))
               (("C-c n I" . org-roam-insert-immediate))))
 
+(global-set-key (kbd "C-x M-r r") 'org-roam)
+(global-set-key (kbd "C-x M-r f") 'org-find-non-ref-file)
+(global-set-key (kbd "C-x M-r g") 'org-roam-graph-show)
+(global-set-key (kbd "C-x M-r i") 'org-insert-non-ref)
+(global-set-key (kbd "C-x M-r I") 'org-roam-insert-immediate)
+(global-set-key (kbd "C-x M-r t") 'org-roam-today)
+(global-set-key (kbd "C-x M-r s") 'org-roam-server-mode)
+(global-set-key (kbd "C-x M-r C-i") 'org-roam-find-index)
+(global-set-key (kbd "C-x M-r a")'orb-note-actions )
+
+
 (add-hook 'after-init-hook 'org-roam-mode)
 
 (require 'org-roam-protocol)
@@ -108,7 +129,7 @@
       '(("d" "default" plain (function org-roam--capture-get-point)
          "%?"
          :file-name "%<%Y%m%d%H%M%S>-${slug}"
-         :head "#+title: ${title}\n"
+         :head "#+title: ${title}\n#+roam_tags: ${tags}\n"
          :unnarrowed t)
         ("w" "website" plain (function org-roam--capture-get-point)
          "%?"
@@ -116,9 +137,9 @@
          :head "#+title: ${title}\n#+roam_key: ${ref}\n"
          :unnarrowed t)
         ("r" "Reference" plain (function org-roam--capture-get-point)
-         "%?"
-         :file-name "%<%Y%m%d%H%M%S>-${slug}"
-         :head "#+title: ${title}\n"
+         ""
+         :file-name "${citekey}"
+         :head "#+title: ${title}\n#+roam_key: ${ref}\n"
          :unnarrowed t
          )))
 
@@ -142,3 +163,10 @@
   :hook (org-roam-mode . org-roam-bibtex-mode)
   :bind (:map org-mode-map
               (("C-c n a" . orb-note-actions))))
+
+;; Aesthetics
+(use-package prettify-utils)
+(prettify-utils-add-hook org-mode
+                         ("[ ]" "☐")
+                         ("[X]" "☑")
+                         ("[-]" "❍"))
