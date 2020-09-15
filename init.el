@@ -3,8 +3,8 @@
 ;; Copyright (c) 2011-2020 Bozhidar Batsov
 ;;
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
-;; URL: http://batsov.com/prelude
-;; Version: 1.0.0
+;; URL: https://github.com/bbatsov/prelude
+;; Version: 1.1.0-snapshot
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
