@@ -114,6 +114,8 @@
          '(85 . 50) '(100 . 100)))))
 (global-set-key (kbd "C-c T") 'toggle-transparency)
 
-
+(require 'scroll-other-window)
+(global-set-key (kbd "C-M-v ") 'sow-scroll-other-window-down)
+(global-set-key (kbd "C-M-V ") 'sow-scroll-other-window)
 
 ; LocalWords:  Autofill Nyan

@@ -111,9 +111,9 @@
               (("C-c n I" . org-roam-insert-immediate))))
 
 (global-set-key (kbd "C-x M-r r") 'org-roam)
-(global-set-key (kbd "C-x M-r f") 'org-find-non-ref-file)
+(global-set-key (kbd "C-x M-r f") 'orb-find-non-ref-file)
 (global-set-key (kbd "C-x M-r g") 'org-roam-graph-show)
-(global-set-key (kbd "C-x M-r i") 'org-insert-non-ref)
+(global-set-key (kbd "C-x M-r i") 'orb-insert-non-ref)
 (global-set-key (kbd "C-x M-r I") 'org-roam-insert-immediate)
 (global-set-key (kbd "C-x M-r t") 'org-roam-today)
 (global-set-key (kbd "C-x M-r s") 'org-roam-server-mode)
@@ -139,9 +139,15 @@
         ("r" "Reference" plain (function org-roam--capture-get-point)
          ""
          :file-name "${citekey}"
-         :head "#+title: ${title}\n#+roam_key: ${ref}\n"
+         :head "#+title: ${title}\n#+roam_key: ${ref}\n#+roam_tags: reference\n"
          :unnarrowed t
          )))
+
+(setq orb-templates
+      '(("r" "ref" plain (function org-roam-capture--get-point) ""
+         :file-name "${citekey}"
+         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS: Bibliography\n" ; <--
+         :unnarrowed t)))
 
 (use-package org-roam-server
   :ensure t
@@ -164,9 +170,5 @@
   :bind (:map org-mode-map
               (("C-c n a" . orb-note-actions))))
 
-;; Aesthetics
-(use-package prettify-utils)
-(prettify-utils-add-hook org-mode
-                         ("[ ]" "☐")
-                         ("[X]" "☑")
-                         ("[-]" "❍"))
+(global-set-key (kbd "¿") 'cdlatex-math-symbol)
+(global-set-key (kbd "¡") 'cdlatex-math-modify)
