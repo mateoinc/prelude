@@ -84,4 +84,9 @@
                   'pdf-view-scroll-down-or-previous-page)))
 
 (provide 'scroll-other-window)
+
+(global-set-key (kbd "C-M-v ") 'sow-scroll-other-window-down)
+(global-set-key (kbd "C-M-V ") 'sow-scroll-other-window)
+
+
 ;;; scroll-other-window.el ends here

@@ -243,3 +243,9 @@ Example:
                (prettify-symbols-mode 1))))
 
 ;;; prettify-utils.el ends here
+
+
+(prettify-utils-add-hook org-mode
+                         (\"[ ]\" \"☐\")
+                         (\"[X]\" \"☑\")
+                         (\"[-]\" \"❍\"))
