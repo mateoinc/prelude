@@ -114,3 +114,11 @@
          '(85 . 50) '(100 . 100)))))
 (global-set-key (kbd "C-c T") 'toggle-transparency)
 (toggle-transparency)
+
+(defun connect-donelias ()
+  (interactive)
+  (dired "/ssh:mbarria@donelias:/home1/mbarria"))
+
+(defun connect-servidor ()
+  (interactive)
+  (dired "/ssh:mbarria@donelias|ssh:servidor:/home/mbarria"))
