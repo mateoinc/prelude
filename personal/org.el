@@ -1,6 +1,8 @@
 (require 'org)
 ;; Autofill
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
+;; Indentation
+(add-hook 'org-mode-hook 'org-indent-mode)
 ;; CDLatex on org files
 (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
 ;; Directory
@@ -8,7 +10,8 @@
  '(org-directory "~/Documents/org")
  '(org-agenda-files (list org-directory
                           "~/Documents/Bib"
-                          "~/Documents/org/roam")))
+                          "~/Documents/org/roam"))
+ '(org-default-notes-file (concat org-directory "/notes.org")))
 ;; Agenda
 (setq org-agenda-include-diary t)
 ;; ipython
@@ -20,9 +23,6 @@
    ))
 ;; Drill
 (require 'org-drill)
-;; Default note target
-(setq org-directory "~/Documents/org")
-(setq org-default-notes-file (concat org-directory "/notes.org"))
 ;; org keybinds
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -35,18 +35,16 @@
 ;; Capture templates
 ;; Define the custom capture templates
 (setq org-capture-templates
-      '(("t" "todo" entry (file org-default-notes-file)
-         "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
+      '(("t" "Todo" entry (file+headline org-default-notes-file "Todo")
+         "* TODO %?\n" )
         ("m" "Meeting" entry (file+headline "~/Documents/org/schedule.org" "Meetings")
          "* %? :MEETING:\n" )
         ("s" "Seminar" entry (file+headline "~/Documents/org/schedule.org" "Seminars")
-         "* %? :SEMINADR:\n" )
+         "* %? :SEMINAR:\n" )
         ("b" "Birthday" entry (file+headline "~/Documents/org/schedule.org" "Birthdays")
          "* %? :BIRTHDAY:\n" )
         ("c" "Class" entry (file+headline "~/Documents/org/schedule.org" "Classes")
          "* %? :CLASS:\n" )
-        ("e" "Meeting" entry (file+headline "~/Documents/org/schedule.org" "Meetings")
-         "* %? :EVENT:\n" )
         ("d" "Diary" entry (file+datetree "~/Documents/org/diary.org")
          "* %?\n%U\n" :clock-in t :clock-resume t)
         ("i" "Idea" entry (file org-default-notes-file)
@@ -80,6 +78,10 @@
 ;;; Bibliography
 (setq reftex-default-bibliography '("~/Documents/org/refs.bib"))
 
+(require 'org-ref)
+(setq org-ref-insert-cite-key "C-c )")
+(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+
 ;; see org-ref for use of these variables
 (setq org-ref-bibliography-notes "~/Documents/org/refnotes.org"
       org-ref-default-bibliography '("~/Documents/org/refs.bib")
@@ -89,9 +91,6 @@
       bibtex-completion-library-path   "~/Documents/bibtex-pdfs/"
       bibtex-completion-notes-path "~/Documents/org/helm-bibtex-notes")
 
-(require 'org-ref)
-(setq org-ref-insert-cite-key "C-c )")
-(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
 
 ;; Roam
 
@@ -105,7 +104,7 @@
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-graph-show))
+               ("C-c n g" . org-roam-graph))
               :map org-mode-map
               (("C-c n i" . org-roam-insert))
               (("C-c n I" . org-roam-insert-immediate))))
@@ -136,18 +135,15 @@
          :file-name "%<%Y%m%d%H%M%S>-${slug}"
          :head "#+title: ${title}\n#+roam_key: ${ref}\n"
          :unnarrowed t)
-        ("r" "Reference" plain (function org-roam--capture-get-point)
-         ""
-         :file-name "${citekey}"
-         :head "#+title: ${title}\n#+roam_key: ${ref}\n#+roam_tags: reference\n"
-         :unnarrowed t
-         )))
+        ))
 
 (setq orb-templates
       '(("r" "ref" plain (function org-roam-capture--get-point) ""
          :file-name "${citekey}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS: Bibliography\n" ; <--
-         :unnarrowed t)))
+         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS: Bibliography\n"
+         :unnarrowed t)
+        ))
+
 
 (use-package org-roam-server
   :ensure t
