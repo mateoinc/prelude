@@ -22,3 +22,43 @@
          (insert filename))
         (t
          (insert (file-relative-name filename)))))
+
+;; Make emacs transparent
+(defun toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (set-frame-parameter
+     nil 'alpha
+     (if (eql (cond ((numberp alpha) alpha)
+                    ((numberp (cdr alpha)) (cdr alpha))
+                    ;; Also handle undocumented (<active> <inactive>) form.
+                    ((numberp (cadr alpha)) (cadr alpha)))
+              100)
+         '(85 . 50) '(100 . 100)))))
+(global-set-key (kbd "C-c T") 'toggle-transparency)
+
+
+;; Automatic screenshot insertion  https://orgmode.org/worg/org-hacks.html#org6235939
+(defun my-org-screenshot ()
+  "Take a screenshot into a time stamped unique-named file in the
+same directory as the org-buffer and insert a link to this file."
+  (interactive)
+  (setq filename
+        (concat
+         (make-temp-name
+          (concat (buffer-file-name)
+                  "_"
+                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+  (call-process "import" nil nil nil filename)
+  (insert (concat "[[" filename "]]"))
+  (org-display-inline-images))
+
+
+;; Edit files through ssh
+(defun connect-donelias ()
+  (interactive)
+  (dired "/ssh:mbarria@donelias:/home1/mbarria"))
+
+(defun connect-servidor ()
+  (interactive)
+  (dired "/ssh:mbarria@donelias|ssh:servidor:/home/mbarria"))
