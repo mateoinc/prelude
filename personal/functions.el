@@ -53,6 +53,7 @@ same directory as the org-buffer and insert a link to this file."
   (insert (concat "[[" filename "]]"))
   (org-display-inline-images))
 
+(global-set-key [s-print] 'my-org-screenshot)
 
 ;; Edit files through ssh
 (defun connect-donelias ()
