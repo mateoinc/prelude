@@ -1,15 +1,14 @@
-;;; prelude-haskell.el --- Emacs Prelude: Nice config for Haskell programming.
+;;; prelude-wsl.el --- Emacs Prelude: WSL-specific setup.
 ;;
 ;; Copyright © 2011-2021 Bozhidar Batsov
 ;;
-;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/prelude
 
 ;; This file is not part of GNU Emacs.
 
 ;;; Commentary:
 
-;; Nice config for Haskell programming.
+;; Additional setup that's useful when running Emacs in WSL.
 
 ;;; License:
 
@@ -30,21 +29,14 @@
 
 ;;; Code:
 
-(require 'prelude-programming)
-(prelude-require-packages '(haskell-mode))
+;; teach Emacs how to open links with your default browser
+(let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+      (cmd-args '("/c" "start")))
+  (when (file-exists-p cmd-exe)
+    (setq browse-url-generic-program  cmd-exe
+          browse-url-generic-args     cmd-args
+          browse-url-browser-function 'browse-url-generic
+          search-web-default-browser 'browse-url-generic)))
 
-(with-eval-after-load 'haskell-mode
-  (defun prelude-haskell-mode-defaults ()
-    (subword-mode +1)
-    (eldoc-mode +1)
-    (haskell-indentation-mode +1)
-    (interactive-haskell-mode +1))
-
-  (setq prelude-haskell-mode-hook 'prelude-haskell-mode-defaults)
-
-  (add-hook 'haskell-mode-hook (lambda ()
-                                 (run-hooks 'prelude-haskell-mode-hook))))
-
-(provide 'prelude-haskell)
-
-;;; prelude-haskell.el ends here
+(provide 'prelude-wsl)
+;;; prelude-wsl.el ends here

@@ -73,7 +73,7 @@ usage() {
     printf "  -d, --directory [dir] \t Install Prelude into the specified directory.\n"
     printf "  \t \t \t \t If 'dir' is a relative path prefix with $HOME.\n"
     printf "  \t \t \t \t Defaults to $HOME/.emacs.d\n"
-    printf "  -s, --source [url] \t \t Clone prelude from 'url'.\n"
+    printf "  -s, --source [url] \t \t Clone Prelude from 'url'.\n"
     printf "  \t \t \t \t Defaults to 'https://github.com/bbatsov/prelude.git'.\n"
     printf "  -n, --no-bytecompile \t \t Skip the bytecompilation step of Prelude.\n"
     printf "  -i, --into \t \t \t Install Prelude into a subdirectory in the existing configuration\n"
@@ -174,9 +174,10 @@ else
 fi
 
 ### Check emacs version
-if [ $(emacs --version 2>/dev/null | sed -n 's/.*[^0-9.]\([0-9]*\.[0-9.]*\).*/\1/p;q' | sed 's/\..*//g') -lt 24 ]
+emacs_version="$(emacs --version 2>/dev/null | sed -n 's/.*[^0-9.]\([0-9]*\.[0-9.]*\).*/\1/p;q' | sed 's/\..*//g')"
+if [ "${emacs_version:-0}" -lt 25 ]
 then
-    printf "$YELLOW WARNING:$RESET Prelude depends on emacs $RED 24$RESET !\n"
+    printf "$YELLOW WARNING:$RESET Prelude requires Emacs $RED 25$RESET or newer!\n"
 fi
 
 if [ -f "$HOME/.emacs" ]
@@ -208,7 +209,7 @@ then
     # File exist but not a regular file or directory
     # WTF NOW?
     printf "$BRED $PRELUDE_INSTALL_DIR exist but isn't a file or directory.\n"
-    printf "$BRED please remove this file or install prelude in a different directory"
+    printf "$BRED please remove this file or install Prelude in a different directory"
     printf "$BRED (-d flag)\n$RESET"
     exit 1
 else
